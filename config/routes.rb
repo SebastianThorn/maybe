@@ -1,41 +1,18 @@
 Rails.application.routes.draw do
   mount GoodJob::Engine => "jobs"
 
-  get "changelog" => "pages#changelog", as: :changelog
-  get "feedback" => "pages#feedback", as: :feedback
+  get "changelog", to: "pages#changelog"
+  get "feedback", to: "pages#feedback"
 
   resource :registration
-  resource :session
+  resources :sessions, only: %i[new create destroy]
   resource :password_reset
   resource :password
-
-  namespace :help do
-    resources :articles, only: :show
-  end
 
   namespace :settings do
     resource :profile, only: %i[show update destroy]
     resource :preferences, only: %i[show update]
-    resource :hosting, only: %i[show update] do
-      post :send_test_email, on: :collection
-    end
-  end
-
-  resources :imports, except: :show do
-    member do
-      get "load"
-      patch "load" => "imports#load_csv"
-      patch "upload" => "imports#upload_csv"
-
-      get "configure"
-      patch "configure" => "imports#update_mappings"
-
-      get "clean"
-      patch "clean" => "imports#update_csv"
-
-      get "confirm"
-      patch "confirm" => "imports#publish"
-    end
+    resource :hosting, only: %i[show update]
   end
 
   resources :tags, except: %i[show destroy] do
@@ -54,6 +31,18 @@ Rails.application.routes.draw do
 
   namespace :account do
     resources :transfers, only: %i[new create destroy]
+  end
+
+  resources :imports, only: %i[index new show create destroy] do
+    post :publish, on: :member
+
+    resource :upload, only: %i[show update], module: :import
+    resource :configuration, only: %i[show update], module: :import
+    resource :clean, only: :show, module: :import
+    resource :confirm, only: :show, module: :import
+
+    resources :rows, only: %i[show update], module: :import
+    resources :mappings, only: :update, module: :import
   end
 
   resources :accounts do
