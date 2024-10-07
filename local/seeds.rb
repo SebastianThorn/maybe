@@ -53,9 +53,6 @@ if File.file?(accounts_yaml_path)
 end
 
 
-
-
-
 puts
 puts "Seeding done!"
 puts "============="

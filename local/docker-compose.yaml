@@ -1,29 +1,11 @@
 # ===========================================================================
-# Example Docker Compose file
+# Auto-seed docker-compose.yaml
 # ===========================================================================
 #
 # Purpose:
 # --------
 #
-# This file is an example Docker Compose configuration for self hosting
-# Maybe on your local machine or on a cloud VPS.
-#
-# The configuration below is a "standard" setup, but may require modification
-# for your specific environment.
-#
-# Setup:
-# ------
-#
-# To run this, you should read the setup guide:
-#
-# https://github.com/maybe-finance/maybe/blob/main/docs/hosting/docker.md
-#
-# Troubleshooting:
-# ----------------
-#
-# If you run into problems, you should open a Discussion here:
-#
-# https://github.com/maybe-finance/maybe/discussions/categories/general
+# This file is made to bootup a local environment with seeded data.
 #
 
 
@@ -31,17 +13,12 @@ services:
 
   app:
     image: ghcr.io/maybe-finance/maybe:latest
-
     volumes:
-      # - app-storage:/rails/storage
       - ./seeds.rb:/rails/db/seeds.rb
       - ./seed_data:/rails/seed_data
-
     ports:
       - 3000:3000
-
     restart: unless-stopped
-
     environment:
       SELF_HOSTING_ENABLED: "true"
       RAILS_FORCE_SSL: "false"
@@ -53,7 +30,6 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-maybe_user}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
       SYNTH_API_KEY: ${SYNTH_API_KEY}
-
     depends_on:
       postgres:
         condition: service_healthy
@@ -61,8 +37,6 @@ services:
   postgres:
     image: postgres:16
     restart: unless-stopped
-    # volumes:
-    #   - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-maybe_user}
       POSTGRES_DB: ${POSTGRES_DB:-maybe_production}
@@ -72,7 +46,3 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-# volumes:
-#   app-storage:
-#   postgres-data:
