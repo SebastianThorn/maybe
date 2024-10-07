@@ -1,0 +1,9 @@
+---
+
+accounts:
+  - name: Utgående
+    balance: 0
+    currency: SEK
+    subtype: checking
+    accountable_type: "Depository"
+    is_active: true

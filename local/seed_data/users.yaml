@@ -1,0 +1,10 @@
+---
+
+users:
+  - email: sebtho01@mail.com
+    password: sebtho01@mail.com
+    role: admin
+
+  - email: member@mail.com
+    password: member@mail.com
+    role: member
